@@ -5,6 +5,7 @@ import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
 import Modal from 'react-bootstrap/Modal'
 import Table from 'react-bootstrap/Table'
+import Badge from 'react-bootstrap/Badge'
 import { useHistory } from 'react-router-dom'
 
 import axios from 'axios'
@@ -15,6 +16,7 @@ import './styles.css'
 function Register() {
     const [show, setShow] = useState(false)
     const [skill, setSkill] = useState('')
+    const [range, setRange] = useState(0)
     const [skills, setSkills] = useState([])
     const formData = { name: '', lastName: '', age: '', grade: '', skills: [] }
     const history = useHistory()
@@ -32,7 +34,10 @@ function Register() {
     }
 
     function handleSkills(push) {
-        if (!skills.includes(skill)) {            
+        const skillsCapitalize = skills.map(skill => skill.toUpperCase())
+        const skillCapitalize = skill.toUpperCase()
+
+        if (!skillsCapitalize.includes(skillCapitalize) && skillCapitalize) {            
             push(skill);
             setSkills([...skills, skill])
         }
@@ -47,8 +52,8 @@ function Register() {
 
     return (
     <Row className="align-items-center mt-4 pb-5">
-        <Col lg="10"><h1>Listagem de usuários</h1></Col>
-        <Col lg="2"><Button onClick={() => setShow(true)}>Cadastrar Usuário</Button></Col>
+        <Col md="8" lg="9" xl="10" className="pb-2"><h1 className="flow-text">Listagem de usuários</h1></Col>
+        <Col md="4" lg="3" xl="2"><Button onClick={() => setShow(true)}>Cadastrar Usuário</Button></Col>
         <Modal show={show} onHide={() => setShow(false)} dialogClassName="main-modal">
             <Formik initialValues={formData} onSubmit={handleSubmit} validationSchema={schema}>
                 <FormikForm>
@@ -56,10 +61,10 @@ function Register() {
                         <Modal.Title>
                             Cadastro de usuários
                         </Modal.Title>
-                        <Button type="submit" onClick={() => { setSkill(''); setSkills([])}}>Cadastrar</Button>
+                        <Button type="submit">Cadastrar</Button>
                     </Modal.Header>
                     <Modal.Body as={Row}>
-                        <Col sm="6">
+                        <Col sm="6" className="pb-4">
                             <Row>
                                 <Col><Form.Text as="h5">Dados pessoais</Form.Text></Col>
                             </Row>
@@ -78,8 +83,8 @@ function Register() {
                             </Row>
                             <Row>
                                 <Form.Group as={Col} lg="6">
-                                    <Form.Label>Idade</Form.Label>
-                                    <Field className="form-control-range" name="age" type="range"></Field>
+                                    <Form.Label>Idade <Badge variant="primary">{range}</Badge></Form.Label>
+                                    <Field className="form-control-range" onClick={event => { setRange(event.target.value) }} name="age" type="range"></Field>
                                     <ErrorMessage component="small" className="text-danger" name="age"></ErrorMessage>
                                 </Form.Group>
 
@@ -106,10 +111,10 @@ function Register() {
                                 <Form.Group lg="12" as={Col}>
                                     <FieldArray name="skills" render={({push}) => (
                                             <Row>
-                                                <Col lg="6">
+                                                <Col md="6" className="pb-2" lg="6">
                                                     <input className="form-control" onChange={handleSkill} value={skill} type="text" placeholder="EX: Javascript"></input>
                                                 </Col>
-                                                <Col lg={{ offset: 3 }}>
+                                                <Col>
                                                     <Button variant="outline-primary" type="button" onClick={() => handleSkills(push)}>Adicionar</Button>
                                                 </Col>
                                             </Row>
